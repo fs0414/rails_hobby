@@ -1,9 +1,15 @@
 class Api::ArticlesController < BaseController
-  before_action :set_article, only: %i[destroy]
+  before_action :set_article, only: %i[update, destroy]
 
   def index
     articles = Article.all
     render json: articles
+  end
+
+  def personal_article
+    current_user_id = current_user.id
+    articles = Article.where(user_id: current_user_id)
+    render json: { current_user: current_user_id, data: articles }
   end
 
   def create
