@@ -8,6 +8,7 @@ Rails.application.routes.draw do
     get 'users', to: 'users#index'
     post 'signup', to: 'users#signup'
     post 'signin', to: 'users#signin'
-  end
 
+    resources :articles, only: [ :index, :create, :destroy ]
+  end
 end
