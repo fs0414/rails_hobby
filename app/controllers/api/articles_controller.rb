@@ -9,37 +9,34 @@ class Api::ArticlesController < BaseController
 
   def personal_article
     current_user_id = current_user.id
-    articles = current_user.articles.as_json(include: :comments)
-    render json: { current_user: current_user_id, data: articles }
+    articles_with_comments = current_user.articles.as_json(include: :comments)
+    render json: { current_user: current_user_id, data: articles_with_comments }
   end
 
   def create
     article = current_user.articles.new(article_params)
-    begin
-      article.save!
+    if article.save
       render json: { data: article }
-    rescue ActiveRecord::RecordInvalid => e
-      render json: { errors: e.record.errors.full_messages }
+    else
+      render json: { errors: article.errors.full_messages }, status: :unprocessable_entity
     end
   end
 
   def update
     @article.update(article_params)
-    begin
-      @article.save!
+    if @article.save
       render json: { data: @article }
-    rescue ActiveRecord::RecodeInvalid => e
-      render json: { errors: e.record.errors.full_messages }
+    else
+      render json: { errors: @article.errors.full_messages }, status: :unprocessable_entity
     end
   end
 
   def destroy
     @article.destroy
-    begin
-      @article.save
+    if @article.save
       render json: { message: 'article delete success' }
-    rescue ActiveRecord::RecodeInvalid => e
-      render json: { errors: e.recode.errors.full_messages }
+    else
+      render json: { errors: @article.errors.full_messages }, status: :unprocessable_entity
     end
   end
 

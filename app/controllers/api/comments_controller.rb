@@ -5,21 +5,25 @@ class Api::CommentsController < ApplicationController
     articles = Article.find(params[:article_id])
     comment = articles.comments.create(comment_params)
     comment.user_id = current_user.id
-    begin
-      comment.save!
+
+    # 別記法
+    # comment = current_user.comments.create(comment_params)
+    # comment.article_id = params[:article_id]
+
+    if comment.save
       render json: { data: comment }
-    rescue ActiveRecord::RecordInvalid => e
-      render json: { errors: e.record.errors.full_messages }
+    else
+      render json: { errors: comment.errors.full_messages }, status: :unprocessable_entity
     end
   end
 
   def destroy
     @comment.destroy
-    begin
-      @comment.save
+    if @comment.save
       render json: { message: 'comment delete success' }
-    rescue ActiveRecord::RecordInvalid => e
-      render json: { errors: e.recode.errors.full_messages }
+    else
+      render json: { errors: comment.errors.full_messages }, status: :unprocessable_entity
+
     end
   end
 

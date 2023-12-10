@@ -10,7 +10,6 @@ Rails.application.routes.draw do
     post 'signin', to: 'users#signin'
 
     resources :articles, only: %i[index create destroy] do
-      # resources :comments, only: %i[create destroy]
       resources :comments, only: %i[create destroy]
     end
     get 'personal_articles', to: 'articles#personal_article'

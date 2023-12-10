@@ -1,11 +1,7 @@
 class Api::UsersController < BaseController
   def index
     users = User.all
-    user = current_user
-
-    binding.pry
-
-    render json: { message: users }
+    render json: { data: users }
   end
 
   def signup
