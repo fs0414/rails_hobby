@@ -7,9 +7,10 @@ class Api::ArticlesController < BaseController
     render json: articles
   end
 
-  def personal_article
-    current_user_id = current_user.id
-    articles_with_comments = current_user.articles.as_json(include: :comments)
+  def personal_articles
+    
+    # current_user_id = current_user.id
+    # articles_with_comments = current_user.articles.as_json(include: :comments)
     render json: { current_user: current_user_id, data: articles_with_comments }
   end
 

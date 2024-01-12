@@ -11,7 +11,10 @@
 # It's strongly recommended that you check this file into your version control system.
 
 ActiveRecord::Schema[7.0].define(version: 2023_12_09_171231) do
-  create_table "articles", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+  # These are extensions that must be enabled in order to support this database
+  enable_extension "plpgsql"
+
+  create_table "articles", force: :cascade do |t|
     t.string "title", null: false
     t.string "content"
     t.bigint "user_id"
@@ -20,7 +23,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_12_09_171231) do
     t.index ["user_id"], name: "index_articles_on_user_id"
   end
 
-  create_table "comments", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+  create_table "comments", force: :cascade do |t|
     t.string "content", null: false
     t.bigint "user_id"
     t.bigint "article_id"
@@ -30,7 +33,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_12_09_171231) do
     t.index ["user_id"], name: "index_comments_on_user_id"
   end
 
-  create_table "users", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+  create_table "users", force: :cascade do |t|
     t.string "email", null: false
     t.string "crypted_password"
     t.string "salt"
