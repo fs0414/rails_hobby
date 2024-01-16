@@ -11,12 +11,31 @@ services:
       POSTGRES_DEV_DATABASE: ${POSTGRES_DEV_DATABASE}
       POSTGRES_TEST_DATABASE: ${POSTGRES_TEST_DATABASE}
       POSTGRES_PRO_DATABASE: ${POSTGRES_PRO_DATABASE}
+    # command: sh -c "rm -f tmp/pids/server.pid"
     volumes:
       - .:/workspace
     tty: true
     stdin_open: true
     ports:
       - 3000:3000
+
+  sidekiq:
+    build:
+      context: ../rails_hobby
+      dockerfile: ./.docker/Dockerfile
+    command: bundle exec sidekiq
+    volumes:
+      - .:/workspace
+    depends_on:
+      - redis
+
+  redis:
+    image: redis:7.0-bookworm
+    env_file: .env
+    command: redis-server --appendonly yes
+    ports:
+      - 6379:6379
+
   db:
     container_name: rails_db_container
     image: postgres

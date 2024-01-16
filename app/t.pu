@@ -1,0 +1,29 @@
+
+@startuml
+entity users {
+    * id : integer
+    --
+    * nickname : varchar
+    * email : varchar
+    * password : varchar
+}
+
+entity sentences {
+    * id : integer
+    --
+    * content : text
+    * user_id : integer
+}
+
+entity other_sentences {
+    * id : integer
+    --
+    * content : text
+    * user_id : integer
+    * sentence_id : integer
+}
+
+users ||--o{ sentences
+users ||--o{ other_sentences
+sentences ||--o{ other_sentences
+@enduml
