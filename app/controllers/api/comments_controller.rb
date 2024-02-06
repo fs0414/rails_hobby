@@ -2,38 +2,30 @@ class Api::CommentsController < ApplicationController
   before_action :set_comment, only: %i[destroy]
 
   def create
-    comment = CommentCreateForm.new(comment_params)
-    # articles = Article.find(params[:article_id])
-    # comment = articles.comments.create(comment_params.merge(user_id: current_user.id))
+    board = Boards::FindBoardQuery.new(
+      id: params[:board_id]
+    ).run
 
-    # 別記法
-    # comment = current_user.comments.create(comment_params)
-    # comment.article_id = params[:article_id]
+    comment = Comments::CreateCommentForm.new(
+      current_user: current_user,
+      content: comment_params[:content],
+      board: board
+    ).run
 
-    if comment.save
-      render json: { data: comment }
-    else
-      render json: { errors: comment.errors.full_messages }, status: :unprocessable_entity
-    end
+    render json: comment
   end
 
   def destroy
-    @comment.destroy
-    if @comment.save
-      render json: { message: 'comment delete success' }
-    else
-      render json: { errors: comment.errors.full_messages }, status: :unprocessable_entity
-    end
+    @comment.destroy!
   end
 
   private
 
   def comment_params
-    params.permit(:content)
+    params.require(:comment).permit(:content)
   end
 
   def set_comment
-    article = Article.find(params[:article_id])
-    @comment = article.comments.find(params[:id])
+    @comment = Comment.find(params[:id])
   end
 end

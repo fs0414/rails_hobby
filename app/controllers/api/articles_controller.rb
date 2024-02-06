@@ -9,22 +9,23 @@ class Api::ArticlesController < BaseController
   end
 
   def personal_articles
-
     current_user_id = current_user.id
     articles_with_comments = current_user.articles.as_json(include: :comments)
     render json: { current_user: current_user_id, data: articles_with_comments }
   end
 
   def create
-    article = current_user.articles.create!(article_params)
+    article = Articles::CreateArticleForm.new(
+      title: article_params[:title],
+      content: article_params[:content],
+      current_user: current_user
+    ).run
 
     render json: article
   end
 
   def update
-    # article = Article.find(params[:id])
     @article.update!(article_params)
-    # head :ok
   end
 
   def destroy

@@ -1,10 +1,10 @@
 version: '3'
 services:
-  api:
-    container_name: rails_api_container
+  app:
+    container_name: app_container
     build:
       context: ../rails_hobby
-      dockerfile: ./.docker/Dockerfile
+      dockerfile: ./.docker/app/Dockerfile
     environment:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
@@ -20,16 +20,23 @@ services:
       - 3000:3000
 
   sidekiq:
+    container_name: sidekiq_container
     build:
       context: ../rails_hobby
-      dockerfile: ./.docker/Dockerfile
-    command: bundle exec sidekiq
+      dockerfile: ./.docker/sidekiq/Dockerfile
     volumes:
       - .:/workspace
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DEV_DATABASE: ${POSTGRES_DEV_DATABASE}
+      POSTGRES_TEST_DATABASE: ${POSTGRES_TEST_DATABASE}
+      POSTGRES_PRO_DATABASE: ${POSTGRES_PRO_DATABASE}
     depends_on:
       - redis
 
   redis:
+    container_name: redis_container
     image: redis:7.0-bookworm
     env_file: .env
     command: redis-server --appendonly yes
@@ -37,7 +44,7 @@ services:
       - 6379:6379
 
   db:
-    container_name: rails_db_container
+    container_name: db_container
     image: postgres
     ports:
       - 5432:5432

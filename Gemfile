@@ -44,6 +44,12 @@ gem "bootsnap", require: false
 gem 'sorcery'
 gem 'jwt'
 
+# gem dotenv
+gem 'dotenv-rails'
+
+# gem aws-sdk
+gem "aws-sdk-sqs"
+
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
   gem "debug", platforms: %i[ mri mingw x64_mingw ]
